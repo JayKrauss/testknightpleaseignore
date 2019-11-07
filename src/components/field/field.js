@@ -6,6 +6,7 @@ class Field extends React.Component {
 
 componentDidMount(){
 let map;
+let currentPOS;
 
 function createArray(num, dimensions) {
     var array = [];
@@ -18,9 +19,8 @@ function createArray(num, dimensions) {
     return array;
   }
 
-//lets create a randomly generated map for our dungeon crawler
 function  createMap() {
-    // let dimensions = 10, // width and height of the map
+    // let dimensions = 9, // width and height of the map
     //   maxTunnels = 10, // max number of tunnels possible
     //   maxLength = 100, // max length each tunnel can have
     //   map = createArray(1, dimensions), // create a 2d array full of 1's
@@ -68,11 +68,11 @@ function  createMap() {
     // }
 
     map =  [[0,0,0,0,0,0,0,0,0,0],
-            [0,1,3,3,1,1,1,1,1,0],
-            [0,1,3,2,3,1,1,1,1,0],
-            [0,1,3,3,1,1,1,1,1,0],
-            [0,1,1,1,1,1,1,1,1,0],
-            [0,1,1,1,1,1,1,1,1,0],
+            [0,1,3,3,1,8,1,1,7,0],
+            [0,1,3,2,3,1,0,0,0,0],
+            [0,1,3,3,1,8,1,1,1,0],
+            [0,1,8,0,0,0,0,1,1,0],
+            [0,6,1,1,1,1,0,1,5,0],
             [0,0,0,0,0,0,0,0,0,0]];
          
     return map; // all our tunnels have been created and our map is complete, so lets return it to our render()
@@ -93,11 +93,24 @@ function mapGenerate(){
                     map[i][j]=`<div id=${coord} class='badge outer'>`;
                 }
                 else if(map[i][j] === 2){
-                    map[i][j]=`<div id=${coord} class='badge tile local'><img src='https://www.clipartwiki.com/clipimg/full/36-366226_knight-images-transparent-background.png'></div>`
+                    map[i][j]=`<div id=${coord} class='badge tile local'><img src=${require('../../images/knight.png')}></div>`
+                    currentPOS = coord;
                 }
-                else if(map[i][j]=== 3){
+                else if(map[i][j] === 3){
                     map[i][j]=`<div id=${coord} class='badge option tile'>`;
                 }    
+                else if(map[i][j] === 5){
+                    map[i][j]=`<div id=${coord} class='badge castle tile'><img src=${require('../../images/castle.png')}></div>`;
+                }
+                else if(map[i][j] === 6){
+                    map[i][j]=`<div id=${coord} class='badge cave tile'><img src=${require('../../images/cave.png')}></div>`;
+                }
+                else if(map[i][j] === 7){
+                    map[i][j]=`<div id=${coord} class='badge chest tile'><img src=${require('../../images/chest.png')}></div>`;
+                }
+                else if(map[i][j] === 8){
+                    map[i][j]=`<div id=${coord} class='badge teepee tile'><img src=${require('../../images/teepee.png')}></div>`;
+                }
                 else{
                     map[i][j]=`<div id=${coord} class='badge tile'>`;
                 }
@@ -105,11 +118,19 @@ function mapGenerate(){
             }
           $("#play-field").append(map[i])
         }  
-    }
- mapGenerate()  
 }
 
-         
+function handleMove(currentPos, chosenPos){
+
+};
+
+mapGenerate(); 
+
+$('.option').on('click', function(){
+
+});
+
+}
 
 render() {
     return (
