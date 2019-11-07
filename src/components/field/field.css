@@ -95,7 +95,8 @@ body {
 	}
 
 .option:hover {
-	top: -10px;
+    top: -10px;
+    cursor: grabbing;
 }
 
 	.hexagon-grid-container {
