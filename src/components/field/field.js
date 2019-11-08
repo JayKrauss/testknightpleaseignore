@@ -7,6 +7,7 @@ class Field extends React.Component {
 componentDidMount(){
 let map;
 let currentPOS;
+let currentType = 2;
 
 function createArray(num, dimensions) {
     var array = [];
@@ -86,14 +87,23 @@ function mapGenerate(){
 
                 let coordY = [i]
                 let coordX = [j]
-                let coord = coordY + '-' + coordX;
+                let type = map[i][j];
+                let coord = coordY + '-' + coordX + '-' + type;
                 console.log('COORD : ' + coord);
+
+                //0 : Unpassable Terrain ||| 1 : Passable clear Terrain ||| 2: Character
+                //3 : Selectable terrain ||| adding a 3 to any type adds this selection
+                //5 : Large castle ||| 9 : Castle gate
+                //6 : Cave - 8 : Ruins ||| 7 : Chest
+                //10 : Unpassable water
+
                 switch (map[i][j]){
                 case 0:
                     map[i][j]=`<div id=${coord} class='badge outer'>`;
                     break;
                 case 2:
                     map[i][j]=`<div id=${coord} class='badge tile local'><img src=${require('../../images/knight.png')}></div>`;
+                    currentPOS = coord;
                     break;
                 case 3:
                     map[i][j]=`<div id=${coord} class='badge option tile'>`;
@@ -141,14 +151,30 @@ function mapGenerate(){
         }  
 }
 
-function handleMove(currentPos, chosenPos){
-
+function handleMove(current, cType, chosen, chosenType){
+    console.log('Passing Data = Current Grid: ' + current + ' Current Type: ' + cType + ' Chosen Grid: ' + chosen + ' Chosen Type: ' + chosenType);
 };
 
 mapGenerate(); 
 
 $('.option').on('click', function(){
+ console.log(this.id)
 
+ let splitID = this.id.split('-');
+ let y = splitID[0];
+ let x = splitID[1];
+ let tileType = splitID[2];
+ console.log(`New : Y : ${y} - X : ${x} - Type : ${tileType}`);
+ let coords = [y, x];
+
+ console.log("Current : " + currentPOS);
+ let splitCurrent = currentPOS.split('-');
+ let cy = splitCurrent[0];
+ let cx = splitCurrent[1]
+ let currentTile = [cy, cx];
+
+ handleMove(currentTile, currentType, coords, tileType);
+ 
 });
 
 }
