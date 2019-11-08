@@ -1,26 +1,46 @@
 import React from 'react';
 import './field.css';
 import $ from 'jquery';
+import mapList from '../../maps/maps'
 
 class Field extends React.Component {
 
 componentDidMount(){
-let map;
-let currentPOS;
+console.log(mapList.map1)
+let numMap = [[0,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0,0],
+              [0,0,0,0,0,0,0,0,0,0]];
+
+let map= mapList.map1;
+
+let grids = [[0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0]];
+
+
+let currentPOS = getIndexOfCurrent(map, 2);
 let currentType = 2;
 
-function createArray(num, dimensions) {
-    var array = [];
-    for (var i = 0; i < dimensions; i++) {
-      array.push([]);
-      for (var j = 0; j < dimensions; j++) {
-        array[i].push(num);
-      }
-    }
-    return array;
-  }
-
-function  createMap() {
+// function createArray(num, dimensions) {
+//     var array = [];
+//     for (var i = 0; i < dimensions; i++) {
+//       array.push([]);
+//       for (var j = 0; j < dimensions; j++) {
+//         array[i].push(num);
+//       }
+//     }
+//     return array;
+//   }
+// mapOptions(currentPOS[0], currentPOS[1])
+function  createMap(mapName) {
     // let dimensions = 9, // width and height of the map
     //   maxTunnels = 10, // max number of tunnels possible
     //   maxLength = 100, // max length each tunnel can have
@@ -68,19 +88,15 @@ function  createMap() {
     //   }
     // }
 
-    map =  [[0,0,0,0,0,0,0,0,0,0],
-            [0,1,3,3,1,8,1,1,7,0],
-            [0,1,3,2,3,1,0,0,0,0],
-            [0,1,3,3,1,9,1,1,1,0],
-            [0,8,8,10,10,10,10,1,1,0],
-            [0,6,1,1,1,7,10,1,5,0],
-            [0,0,0,0,0,0,0,10,0,0]];
-         
+    map =  mapName;
+         console.log('Premap: ')
+         console.log(map)
     return map; 
 }
 
-function mapGenerate(){
-    var map = createMap();  
+function mapGenerate(mapName){
+    grids = createMap(mapName);  
+    $("#play-field").html('');
         for(var i = 0; i < map.length; i++) {
             var innerArrayLength = map[i].length;
             for(var j = 0; j<innerArrayLength; j++){
@@ -97,65 +113,199 @@ function mapGenerate(){
                 //6 : Cave - 8 : Ruins ||| 7 : Chest
                 //10 : Unpassable water
 
-                switch (map[i][j]){
+                switch (type){
                 case 0:
-                    map[i][j]=`<div id=${coord} class='badge outer'>`;
+                    grids[i][j]=`<div id=${coord} class='badge outer'>`;
                     break;
                 case 2:
-                    map[i][j]=`<div id=${coord} class='badge tile local'><img src=${require('../../images/knight.png')}></div>`;
-                    currentPOS = coord;
+                    grids[i][j]=`<div id=${coord} class='badge tile local'><img src=${require('../../images/knight.png')}></div>`;
+                    
                     break;
                 case 3:
-                    map[i][j]=`<div id=${coord} class='badge option tile'>`;
+                    grids[i][j]=`<div id=${coord} class='badge option tile'>`;
                     break;
                 case 5:
-                    map[i][j]=`<div id=${coord} class='badge castle tile'><img src=${require('../../images/castle.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge castle tile'><img src=${require('../../images/castle.png')}></div>`;
                     break;
                 case 53:
-                    map[i][j]=`<div id=${coord} class='badge castle tile option'><img src=${require('../../images/castle.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge castle tile option'><img src=${require('../../images/castle.png')}></div>`;
                     break;    
                 case 6:
-                    map[i][j]=`<div id=${coord} class='badge cave tile'><img src=${require('../../images/cave.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge cave tile'><img src=${require('../../images/cave.png')}></div>`;
                     break;
                 case 63:
-                    map[i][j]=`<div id=${coord} class='badge cave tile option'><img src=${require('../../images/cave.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge cave tile option'><img src=${require('../../images/cave.png')}></div>`;
                     break;
                 case 7:
-                    map[i][j]=`<div id=${coord} class='badge chest tile'><img src=${require('../../images/chest.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge chest tile'><img src=${require('../../images/chest.png')}></div>`;
                     break;
                 case 73:
-                    map[i][j]=`<div id=${coord} class='badge chest tile option'><img src=${require('../../images/chest.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge chest tile option'><img src=${require('../../images/chest.png')}></div>`;
                     break;
                 case 8:
-                    map[i][j]=`<div id=${coord} class='badge ruins tile'><img src=${require('../../images/ruins.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge ruins tile'><img src=${require('../../images/ruins.png')}></div>`;
                     break;
                 case 83:
-                    map[i][j]=`<div id=${coord} class='badge ruins tile option'><img src=${require('../../images/ruins.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge ruins tile option'><img src=${require('../../images/ruins.png')}></div>`;
                     break;
                 case 9:
-                    map[i][j]=`<div id=${coord} class='badge gate tile'><img src=${require('../../images/gate.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge gate tile'><img src=${require('../../images/gate.png')}></div>`;
                     break;
                 case 93:
-                    map[i][j]=`<div id=${coord} class='badge gate tile option'><img src=${require('../../images/gate.png')}></div>`;
+                    grids[i][j]=`<div id=${coord} class='badge gate tile option'><img src=${require('../../images/gate.png')}></div>`;
                     break;
                 case 10:
-                    map[i][j]=`<div id=${coord} class='badge water tile'>`;
+                    grids[i][j]=`<div id=${coord} class='badge water tile'>`;
                     break;
                 default:
-                    map[i][j]=`<div id=${coord} class='badge tile'>`;
+                    grids[i][j]=`<div id=${coord} class='badge tile'>`;
                     break;
                 }
-                ;
             }
-          $("#play-field").append(map[i])
+          $("#play-field").append(grids[i])
         }  
+        map =  mapList.map1;
+        console.log(map)
+    }
+
+function modifyMap(coord){
+    let Y = coord[0];
+    let X = coord[1];
+    let type = Number(numMap[Y][X]);
+    console.log('GridType: ' + type)
+
+    switch (type){
+        case 2:
+            numMap[Y][X] = 3;
+            break;
+        case 3:
+            numMap[Y][X] = 2;
+            break;
+        case 0:
+            numMap[Y][X] = 0;
+            break;
+        case 10:
+            numMap[Y][X] = 10;
+            break;
+        default:
+            let addOption = (type * 10) + 3;
+            numMap[Y][X] = addOption;
+            break;
+    }
+}
+
+function mapOptions(){
+    let coordList = [];
+    let coord = getIndexOfCurrent(map, 2);
+
+    console.log('CURRENT TYPE:')
+    console.log('INTERMEDIATE COORD');
+    console.log(coord)
+    let zeroPlace = Number(coord[0]);
+    let onePlace =  Number(coord[1]);
+    if (zeroPlace % 2 === 0){
+                let topLeft = [(zeroPlace - 1),(onePlace - 1), map[(zeroPlace - 1)][(onePlace - 1)]];
+                coordList.push(topLeft);
+                let topRight = [(zeroPlace - 1),(onePlace), map[(zeroPlace - 1)][(onePlace)]];
+                coordList.push(topRight);
+                console.log('Top Left: ' + topLeft + ' Top Right: ' + topRight);
+                let left = [zeroPlace, (onePlace - 1), map[zeroPlace][(onePlace - 1)]];
+                coordList.push(left);
+                let right = [zeroPlace, (onePlace + 1), map[zeroPlace][(onePlace + 1)]];
+                coordList.push(right);
+                console.log('Left: ' + left + ' Right: ' + right);
+                let bottomLeft = [(zeroPlace + 1),(onePlace - 1), map[(zeroPlace + 1)][(onePlace - 1)]];
+                coordList.push(bottomLeft);
+                let bottomRight = [(zeroPlace + 1),(onePlace), map[(zeroPlace + 1)][(onePlace)]];
+                coordList.push(bottomRight);
+                console.log('Bottom Left: ' + bottomLeft + ' Bottom Right: ' + bottomRight);
+    }
+    else{
+                let topLeft = [(zeroPlace - 1),(onePlace), map[(zeroPlace - 1)][(onePlace)]];
+                coordList.push(topLeft);
+                let topRight = [(zeroPlace - 1),(onePlace + 1), map[(zeroPlace - 1)][(onePlace)]];
+                coordList.push(topRight);
+                console.log('Top Left: ' + topLeft + ' Top Right: ' + topRight);
+                let left = [zeroPlace, (onePlace - 1), map[zeroPlace][(onePlace - 1)]];
+                coordList.push(left);
+                let right = [zeroPlace, (onePlace + 1), map[zeroPlace][(onePlace + 1)]];
+                coordList.push(right);
+                console.log('Left: ' + left + ' Right: ' + right);
+                let bottomLeft = [(zeroPlace + 1),(onePlace), map[(zeroPlace + 1)][(onePlace)]];
+                coordList.push(bottomLeft);
+                let bottomRight = [(zeroPlace + 1),(onePlace + 1), (map[(zeroPlace + 1)][(onePlace)])];
+                coordList.push(bottomRight);
+                console.log('Bottom Left: ' + bottomLeft + ' Bottom Right: ' + bottomRight);
+    }
+console.log('COORD LIST')
+console.log(coordList)
+    for (var i=0; i<coordList.length; i++){
+        let y = Number(coordList[i][0]);
+        let x = Number(coordList[i][1]);
+        let type = Number(coordList[i][2]);
+        switch (type){
+            case 1:
+                    map[y][x] = 3;
+                break;
+            case 0:
+                    map[y][x] = 0;
+                break;
+            case 10:
+                    map[y][x] = 10;
+                break;
+            default:
+                let addOption = (type * 10) + 3;
+                map[y][x] = addOption;
+                break;
+        }
+    }
 }
 
 function handleMove(current, cType, chosen, chosenType){
-    console.log('Passing Data = Current Grid: ' + current + ' Current Type: ' + cType + ' Chosen Grid: ' + chosen + ' Chosen Type: ' + chosenType);
+console.log("Current: ");
+console.log(current);
+console.log("Current Type: ");
+console.log(cType);
+console.log("Chosen: ");
+console.log(chosen);
+console.log("Chosen Type: ");
+console.log(chosenType);
+console.log(map);
 };
 
-mapGenerate(); 
+function mapRebuild(stringArray){
+    for(var i = 0; i < stringArray.length; i++) {
+        var innerArrayLengthR = stringArray[i].length;
+        for(var j = 0; j<innerArrayLengthR; j++){
+    let Y = [i];
+    let X = [j];
+    let gridElementR = stringArray[Y][X];
+    let eleSplitR = String(gridElementR).split(' ')
+    let gridIDArrR = String(eleSplitR[1]).substring(3).split('-');
+    console.log('gridIDArrR: ' + gridIDArrR)
+    let gridYR = gridIDArrR[0];
+    let gridXR = gridIDArrR[1];
+    let gridTypeR = gridIDArrR[2];
+
+    numMap[gridYR][gridXR] = gridTypeR;
+    }
+  }
+}
+
+function getIndexOfCurrent(arr, k) {
+        for (var i = 0; i < arr.length; i++) {
+          var index = arr[i].indexOf(k);
+          if (index > -1) {
+            return [i, index];
+          }
+        }
+      }
+
+mapOptions()
+mapGenerate(mapList.map1); 
+
+console.log('FINAL MAP')
+console.log(map)
 
 $('.option').on('click', function(){
  console.log(this.id)
@@ -167,14 +317,13 @@ $('.option').on('click', function(){
  console.log(`New : Y : ${y} - X : ${x} - Type : ${tileType}`);
  let coords = [y, x];
 
- console.log("Current : " + currentPOS);
- let splitCurrent = currentPOS.split('-');
- let cy = splitCurrent[0];
- let cx = splitCurrent[1]
+ let cy = currentPOS[0];
+ let cx = currentPOS[1];
  let currentTile = [cy, cx];
 
+    console.log(map);
+    
  handleMove(currentTile, currentType, coords, tileType);
- 
 });
 
 }
@@ -184,7 +333,7 @@ render() {
 <center>
     <br/><br/><br/>
 <div id='main-area'>
-    <br/><br/>
+    <br/><br/><br/><br/>
     <div className="hexagon-grid-container" id='play-field'></div>
 </div>
 </center>
