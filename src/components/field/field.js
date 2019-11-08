@@ -70,13 +70,13 @@ function  createMap() {
     map =  [[0,0,0,0,0,0,0,0,0,0],
             [0,1,3,3,1,8,1,1,7,0],
             [0,1,3,2,3,1,0,0,0,0],
-            [0,1,3,3,1,8,1,1,1,0],
-            [0,1,8,0,0,0,0,1,1,0],
-            [0,6,1,1,1,1,0,1,5,0],
-            [0,0,0,0,0,0,0,0,0,0]];
+            [0,1,3,3,1,9,1,1,1,0],
+            [0,8,8,10,10,10,10,1,1,0],
+            [0,6,1,1,1,7,10,1,5,0],
+            [0,0,0,0,0,0,0,10,0,0]];
          
-    return map; // all our tunnels have been created and our map is complete, so lets return it to our render()
-  };
+    return map; 
+}
 
 function mapGenerate(){
     var map = createMap();  
@@ -88,31 +88,52 @@ function mapGenerate(){
                 let coordX = [j]
                 let coord = coordY + '-' + coordX;
                 console.log('COORD : ' + coord);
-
-                if(map[i][j] === 0){
+                switch (map[i][j]){
+                case 0:
                     map[i][j]=`<div id=${coord} class='badge outer'>`;
-                }
-                else if(map[i][j] === 2){
-                    map[i][j]=`<div id=${coord} class='badge tile local'><img src=${require('../../images/knight.png')}></div>`
-                    currentPOS = coord;
-                }
-                else if(map[i][j] === 3){
+                    break;
+                case 2:
+                    map[i][j]=`<div id=${coord} class='badge tile local'><img src=${require('../../images/knight.png')}></div>`;
+                    break;
+                case 3:
                     map[i][j]=`<div id=${coord} class='badge option tile'>`;
-                }    
-                else if(map[i][j] === 5){
+                    break;
+                case 5:
                     map[i][j]=`<div id=${coord} class='badge castle tile'><img src=${require('../../images/castle.png')}></div>`;
-                }
-                else if(map[i][j] === 6){
+                    break;
+                case 53:
+                    map[i][j]=`<div id=${coord} class='badge castle tile option'><img src=${require('../../images/castle.png')}></div>`;
+                    break;    
+                case 6:
                     map[i][j]=`<div id=${coord} class='badge cave tile'><img src=${require('../../images/cave.png')}></div>`;
-                }
-                else if(map[i][j] === 7){
+                    break;
+                case 63:
+                    map[i][j]=`<div id=${coord} class='badge cave tile option'><img src=${require('../../images/cave.png')}></div>`;
+                    break;
+                case 7:
                     map[i][j]=`<div id=${coord} class='badge chest tile'><img src=${require('../../images/chest.png')}></div>`;
-                }
-                else if(map[i][j] === 8){
-                    map[i][j]=`<div id=${coord} class='badge teepee tile'><img src=${require('../../images/teepee.png')}></div>`;
-                }
-                else{
+                    break;
+                case 73:
+                    map[i][j]=`<div id=${coord} class='badge chest tile option'><img src=${require('../../images/chest.png')}></div>`;
+                    break;
+                case 8:
+                    map[i][j]=`<div id=${coord} class='badge ruins tile'><img src=${require('../../images/ruins.png')}></div>`;
+                    break;
+                case 83:
+                    map[i][j]=`<div id=${coord} class='badge ruins tile option'><img src=${require('../../images/ruins.png')}></div>`;
+                    break;
+                case 9:
+                    map[i][j]=`<div id=${coord} class='badge gate tile'><img src=${require('../../images/gate.png')}></div>`;
+                    break;
+                case 93:
+                    map[i][j]=`<div id=${coord} class='badge gate tile option'><img src=${require('../../images/gate.png')}></div>`;
+                    break;
+                case 10:
+                    map[i][j]=`<div id=${coord} class='badge water tile'>`;
+                    break;
+                default:
                     map[i][j]=`<div id=${coord} class='badge tile'>`;
+                    break;
                 }
                 ;
             }

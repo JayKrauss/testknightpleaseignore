@@ -45,6 +45,10 @@ body {
   background: linear-gradient(to bottom right, #505050 0%, #000000 100%);
 }
 
+.water {
+    background: linear-gradient(to bottom right, #03254c 0%, #187bcd 100%);
+}
+
 .local img{
     left:-100%; right:-100%;
     width: auto; height:85%;
@@ -55,7 +59,7 @@ body {
 
 .castle img{
     left:-100%; right:-100%;
-    width: auto; height:65%;
+    width: auto; height:85%;
     margin:0 auto;  
     z-index: 5;
     transform: rotate(-95deg);
@@ -63,7 +67,7 @@ body {
 
 .chest img{
     left:-100%; right:-100%;
-    width: auto; height:55%;
+    width: auto; height:35%;
     margin:0 auto;  
     z-index: 5;
     transform: rotate(-90deg);
@@ -77,12 +81,20 @@ body {
     transform: rotate(-90deg);
 }
 
-.teepee img{
+.ruins img{
     left:-100%; right:-100%;
-    width: auto; height:65%;
+    width: auto; height:85%;
     margin:0 auto;  
     z-index: 5;
     transform: rotate(-90deg);
+}
+
+.gate img{
+    left:-100%; right:-100%;
+    width: auto; height:85%;
+    margin:0 auto;  
+    z-index: 5;
+    transform: rotate(-85deg);
 }
 
 .badge:before,
