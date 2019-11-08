@@ -3,10 +3,6 @@ import './field.css';
 import $ from 'jquery';
 import mapList from '../../maps/maps'
 
-class Field extends React.Component {
-
-componentDidMount(){
-console.log(mapList.map1)
 let numMap = [[0,0,0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0,0,0,0],
@@ -25,6 +21,14 @@ let grids = [[0,0,0,0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,0,0,0]];
 
+function getIndexOfCurrent(arr, k) {
+    for (var i = 0; i < arr.length; i++) {
+        var index = arr[i].indexOf(k);
+        if (index > -1) {
+        return [i, index];
+        }
+    }
+}
 
 let currentPOS = getIndexOfCurrent(map, 2);
 let currentType = 2;
@@ -39,7 +43,7 @@ let currentType = 2;
 //     }
 //     return array;
 //   }
-// mapOptions(currentPOS[0], currentPOS[1])
+
 function  createMap(mapName) {
     // let dimensions = 9, // width and height of the map
     //   maxTunnels = 10, // max number of tunnels possible
@@ -164,40 +168,20 @@ function mapGenerate(mapName){
             }
           $("#play-field").append(grids[i])
         }  
-        map =  mapList.map1;
-        console.log(map)
     }
 
-function modifyMap(coord){
-    let Y = coord[0];
-    let X = coord[1];
-    let type = Number(numMap[Y][X]);
-    console.log('GridType: ' + type)
-
-    switch (type){
-        case 2:
-            numMap[Y][X] = 3;
-            break;
-        case 3:
-            numMap[Y][X] = 2;
-            break;
-        case 0:
-            numMap[Y][X] = 0;
-            break;
-        case 10:
-            numMap[Y][X] = 10;
-            break;
-        default:
-            let addOption = (type * 10) + 3;
-            numMap[Y][X] = addOption;
-            break;
-    }
-}
-
-function mapOptions(){
+function mapOptions(mapName){
     let coordList = [];
-    let coord = getIndexOfCurrent(map, 2);
-
+    let coord = getIndexOfCurrent(mapName, 2);
+    for(var i = 0; i < map.length; i++) {
+        var innerArrayLength = map[i].length;
+        for(var j = 0; j<innerArrayLength; j++){
+            let type = map[i][j];
+            if (type === 3){
+                map[i][j] = 1;
+            }
+        }
+    }
     console.log('CURRENT TYPE:')
     console.log('INTERMEDIATE COORD');
     console.log(coord)
@@ -245,33 +229,21 @@ console.log(coordList)
         let type = Number(coordList[i][2]);
         switch (type){
             case 1:
-                    map[y][x] = 3;
+                    mapName[y][x] = 3;
                 break;
             case 0:
-                    map[y][x] = 0;
+                    mapName[y][x] = 0;
                 break;
             case 10:
-                    map[y][x] = 10;
+                    mapName[y][x] = 10;
                 break;
             default:
                 let addOption = (type * 10) + 3;
-                map[y][x] = addOption;
+                mapName[y][x] = addOption;
                 break;
         }
     }
 }
-
-function handleMove(current, cType, chosen, chosenType){
-console.log("Current: ");
-console.log(current);
-console.log("Current Type: ");
-console.log(cType);
-console.log("Chosen: ");
-console.log(chosen);
-console.log("Chosen Type: ");
-console.log(chosenType);
-console.log(map);
-};
 
 function mapRebuild(stringArray){
     for(var i = 0; i < stringArray.length; i++) {
@@ -282,49 +254,63 @@ function mapRebuild(stringArray){
     let gridElementR = stringArray[Y][X];
     let eleSplitR = String(gridElementR).split(' ')
     let gridIDArrR = String(eleSplitR[1]).substring(3).split('-');
-    console.log('gridIDArrR: ' + gridIDArrR)
-    let gridYR = gridIDArrR[0];
-    let gridXR = gridIDArrR[1];
-    let gridTypeR = gridIDArrR[2];
+    let gridYR = Number(gridIDArrR[0]);
+    let gridXR = Number(gridIDArrR[1]);
+    let gridTypeR = Number(gridIDArrR[2]);
 
     numMap[gridYR][gridXR] = gridTypeR;
     }
   }
 }
-
-function getIndexOfCurrent(arr, k) {
-        for (var i = 0; i < arr.length; i++) {
-          var index = arr[i].indexOf(k);
-          if (index > -1) {
-            return [i, index];
-          }
-        }
-      }
-
-mapOptions()
-mapGenerate(mapList.map1); 
-
 console.log('FINAL MAP')
 console.log(map)
 
-$('.option').on('click', function(){
- console.log(this.id)
+function handleMove(current, cType, chosen, chosenType){
+    console.log("Current: ");
+    console.log(current);
+    console.log("Current Type: ");
+    console.log(cType);
+    console.log("Chosen: ");
+    console.log(chosen);
+    console.log("Chosen Type: ");
+    console.log(chosenType);
+    mapRebuild(map);
+    console.log(numMap);
+    numMap[current[0]][current[1]] = 1;
+    numMap[chosen[0]][chosen[1]] = 2;
+    console.log(numMap);
+    map = numMap;
+    mapOptions(map);
+    mapGenerate(map);
+};
 
- let splitID = this.id.split('-');
- let y = splitID[0];
- let x = splitID[1];
- let tileType = splitID[2];
- console.log(`New : Y : ${y} - X : ${x} - Type : ${tileType}`);
- let coords = [y, x];
+$(document).ready(function(){
+    $('.option').on('click', function(){
+    console.log(this.id)
 
- let cy = currentPOS[0];
- let cx = currentPOS[1];
- let currentTile = [cy, cx];
+    let splitID = this.id.split('-');
+    let y = splitID[0];
+    let x = splitID[1];
+    let tileType = splitID[2];
+    console.log(`New : Y : ${y} - X : ${x} - Type : ${tileType}`);
+    let coords = [y, x];
+
+    let cy = currentPOS[0];
+    let cx = currentPOS[1];
+    let currentTile = [cy, cx];
 
     console.log(map);
-    
- handleMove(currentTile, currentType, coords, tileType);
-});
+        
+    handleMove(currentTile, currentType, coords, tileType);
+    });
+})
+
+class Field extends React.Component {
+
+componentDidMount(){
+
+mapOptions(map)
+mapGenerate(mapList.map1); 
 
 }
 
@@ -341,5 +327,6 @@ render() {
     }
 
 }
+
 
 export default Field;
